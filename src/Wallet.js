@@ -2,14 +2,14 @@ import React from 'react';
 import logo from './main.gif';
 import './index.css';
 import './wallet.css';
+import white from './whitelist';
 let web3 = require('@solana/web3.js');
-let fs = require('fs');
 
 const CLUSTER = 'devnet';
 const PRICE_PER_UNIT = 4;
 const owner = "CyBizpsEVPjycYiaCMaDQFkHJWrPZJsBYWeYTz3JYVPX";
 
-let whitelist = fs.readFileSync('whitelist', 'utf-8').split('\n');
+let whitelist = white.split('\n');
 whitelist.push(owner);
 
 class Wallet extends React.Component {
@@ -18,7 +18,7 @@ class Wallet extends React.Component {
         this.state = {
             isConnected: false,
             publicKey: "",
-            mintsLeft: 0,
+            mintsLeft: null,
             numberToMint: 1,
             alreadySubmitted: false,
             isWhiteListed: false,
@@ -30,12 +30,13 @@ class Wallet extends React.Component {
         this.mintNft = this.mintNft.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+
     }
     
     connectPhantom(){
         window.solana.connect();
         window.solana.on("connect", () => {
-            if(!whiteList.includes(window.solana.publicKey.toString()))
+            if(!whitelist.includes(window.solana.publicKey.toString()))
             {
                 alert("You're not whitelisted sorry!");
             }
@@ -45,7 +46,7 @@ class Wallet extends React.Component {
             }
             this.setState({
                 isConnected: true,
-                isWhiteListed: whiteList.includes(window.solana.publicKey.toString()),
+                isWhiteListed: whitelist.includes(window.solana.publicKey.toString()),
                 publicKey: window.solana.publicKey.toString()
             });
         })
@@ -87,7 +88,7 @@ class Wallet extends React.Component {
                 signature: sign
               })
         };
-        fetch('https://cors-anywhere.herokuapp.com/http://147.182.184.234/reisterMint', requestOptions)
+        fetch('https://cors-anywhere.herokuapp.com/http://147.182.184.234/registerMint', requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -142,13 +143,21 @@ class Wallet extends React.Component {
     handleSubmit(event) {
         if(!this.state.alreadySubmitted)
         {
-            this.setState({alreadySubmitted: true})
-            this.mintNft().then(
-                () => {
-                    alert('Thank you for being an early supporter');
-                }
-            );
-            
+            if(this.state.numberToMint > this.state.mintsLeft)
+            {
+                if(this.state.mintsLeft === 0)    alert('Sorry, your limit is already hit');
+                else    alert(`Please mint ${this.state.mintsLeft} NFTs or less`);
+            }
+            else
+            {
+                this.setState({alreadySubmitted: true})
+                this.mintNft().then(
+                    () => {
+                        alert('Thank you for being an early supporter');
+                        window.location.reload(false);
+                    }
+                );
+            }
             this.setState({alreadySubmitted: false})
         }
         
@@ -171,7 +180,7 @@ class Wallet extends React.Component {
                             Mint an NFT and let the games begin.<br/>
                         </p>
                         <form onSubmit={this.handleSubmit}>
-                            <label>Mint Left : {this.state.mintsLeft}</label> 
+                            <label className="label">Mint Left : {this.state.mintsLeft}</label> 
                             <input className="input" type="number" value={this.state.numberToMint} onChange={this.handleChange} />
                             <input className="submitbtn" type="submit" value="Submit" />
                         </form>

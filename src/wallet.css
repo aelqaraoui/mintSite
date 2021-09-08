@@ -49,9 +49,13 @@ body {
     font-size: large;
     font-weight: bold;
     width: 10%;
-    margin-left: 40%;
+    margin-left: 10%;
     margin-right: 5%;
     text-align: center;
+}
+
+.label {
+    margin-left: 25%;
 }
 
 .title {
