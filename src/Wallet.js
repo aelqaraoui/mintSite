@@ -63,7 +63,7 @@ class Wallet extends React.Component {
                 address: window.solana.publicKey.toString()
               })
         };
-        fetch('http://localhost:4000/getMintsLeft', requestOptions)
+        fetch('http://147.182.184.234/getMintsLeft', requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log("Holy shit", data);
@@ -86,7 +86,7 @@ class Wallet extends React.Component {
                 signature: sign
               })
         };
-        fetch('http://localhost:4000/registerMint', requestOptions)
+        fetch('http://147.182.184.234/registerMint', requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
