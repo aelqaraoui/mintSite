@@ -58,16 +58,15 @@ class Wallet extends React.Component {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': 'http://localhost:3000' 
             },
             body: JSON.stringify({
                 address: window.solana.publicKey.toString()
               })
         };
-        fetch('https://cors-anywhere.herokuapp.com/http://147.182.184.234/getMintsLeft', requestOptions)
+        fetch('http://localhost:4000/getMintsLeft', requestOptions)
             .then(response => response.json())
             .then(data => {
-                console.log(data);
+                console.log("Holy shit", data);
                 this.setState({
                     mintsLeft: data.mints_left
                 });
@@ -80,7 +79,6 @@ class Wallet extends React.Component {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': 'http://localhost:3000' 
             },
             body: JSON.stringify({
                 num: number,
@@ -88,7 +86,7 @@ class Wallet extends React.Component {
                 signature: sign
               })
         };
-        fetch('https://cors-anywhere.herokuapp.com/http://147.182.184.234/registerMint', requestOptions)
+        fetch('http://localhost:4000/registerMint', requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
